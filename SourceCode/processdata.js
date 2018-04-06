@@ -17,6 +17,10 @@ for(var i in dirs)
   }
 }
 
+var devstats = {'NOMINAL': 0, 'REPAIR': 0, 'MUTANT_REPAIR': 0};
+var trainstats = {'NOMINAL': 0, 'REPAIR': 0, 'MUTANT_REPAIR': 0};
+var teststats = {'NOMINAL': 0, 'REPAIR': 0, 'MUTANT_REPAIR': 0};
+
 var dataset = fs.readFileSync("dataset.json");
 var datasetJSON = JSON.parse(dataset);
 var buggyTrain = []; 
@@ -53,17 +57,20 @@ for(var i = 0; i< datasetJSON.length; i++)
     var type = changePair.type;   
  
     if(isTestSet)
-    { 
+    {
+      teststats[type] += 1;  
       buggyTest.push(before);
       correctTest.push(after);
     }
     else if(isDevSet)
     {
+      devstats[type] += 1;
       buggyDev.push(before);
       correctDev.push(after);
     }
     else
     {
+      trainstats[type] +=1;
       buggyTrain.push(before);
       correctTrain.push(after);
     }
@@ -79,3 +86,11 @@ for(var i = 0; i < examples.length; i++){
 	console.log('Processed ' + j + '.js' + ' in ' + dir);			});
   }
 }
+
+console.log('Train Stats:');
+console.log(trainstats);
+console.log('Dev Stats:');
+console.log(devstats);
+console.log('Test Stats:');
+console.log(teststats);
+
